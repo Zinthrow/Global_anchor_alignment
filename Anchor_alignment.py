@@ -1,3 +1,8 @@
+"""
+Created on Sat Nov  4 17:01:01 2017
+
+@author: alex
+"""
 import os
 import numpy as np
 
@@ -15,12 +20,12 @@ def Ds(i,j):  #score at (i,j) coordinates for diagonal movement
                Iy[j-1][i-1] + S(i,j))
     
 def Ixs(i,j): #score at (i,j) coordinates for horizonatal movement
-    return max(D[j][i-1] + g + s,
-               Ix[j][i-1] + s)
-
-def Iys(i,j): #score at (i,j) coordinates for horizonatal movement
     return max(D[j-1][i] + g + s,
                Ix[j-1][i] + s)
+
+def Iys(i,j): #score at (i,j) coordinates for horizonatal movement
+    return max(D[j][i-1] + g + s,
+               Iy[j][i-1] + s)
                         
 def initialize():
     for indy, y in enumerate(n):
@@ -64,6 +69,7 @@ Iy = np.array([[-inf]*len(m)]*len(n)) #vertical movement
 initialize()
 
 #np.set_printoptions(threshold=np.inf)
-print (Iy)           
+print (Ix)           
+       
 
 
