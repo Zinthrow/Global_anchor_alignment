@@ -1,4 +1,3 @@
-
 """
 Created on Sat Nov  4 17:01:01 2017
 
@@ -48,37 +47,10 @@ def box_max(i,j):
     return  max(D[j][i],
             Ix[j][i],
             Iy[j][i])
-    
-def box_max_ind(i,j):
-    max_val = box_max(i,j)
-    if max_val == D[j][i]:
-        return D[j][i]  
-    elif max_val == Ix[j][i]:
-        return Ix[j][i]
-    elif max_val == Iy[j][i]:
-        return Iy[j][i] 
-'''       
-def direction_max(i,j):
-    max_dir = max(box_max(i-1,j-1),
-                  box_max(i-1,j),
-                  box_max(i,j-1))
-    if max_dir == box_max(i-1,j-1):
-        m_align = m[i-1] + m_align
-        n_align = n[j-1] + m_align
-        indx = indx-1
-        indy = indy-1
-    elif max_dir == box_max(i-1,j):
-        m_align = m[i-1] + m_align
-        n_align = "-" + m_align
-        indx = indx-1
-    elif max_dir == box_max(i,j-1):
-        m_align = "-" + m_align
-        n_align = n[j-1] + m_align
-        indy = indy-1
-'''                
+               
 def recurse():
-    m_align = ""
-    n_align = ""
+    m_align = m[m_len-1]
+    n_align = n[n_len-1]
     indx = m_len-1
     indy = n_len-1
     while indx !=0 and indy != 0:
@@ -89,16 +61,16 @@ def recurse():
                   box_max(i,j-1))
         if max_dir == box_max(i-1,j-1):
             m_align = m[i-1] + m_align
-            n_align = n[j-1] + m_align
+            n_align = n[j-1] + n_align
             indx = indx-1
             indy = indy-1
         elif max_dir == box_max(i-1,j):
             m_align = m[i-1] + m_align
-            n_align = "-" + m_align
+            n_align = "-" + n_align
             indx = indx-1
         elif max_dir == box_max(i,j-1):
             m_align = "-" + m_align
-            n_align = n[j-1] + m_align
+            n_align = n[j-1] + n_align
             indy = indy-1
         
     print (m_align)
@@ -128,11 +100,5 @@ D = np.array([[-inf]*m_len]*n_len) #diagonal movement
 Ix = np.array([[-inf]*m_len]*n_len) #horizontal movement
 Iy = np.array([[-inf]*m_len]*n_len) #vertical movement
 
-print ("    " + m)
-print (n)
-print ("")
 initialize()
-recurse()
-#np.set_printoptions(threshold=np.inf)\
-                 
-
+recurse()             
