@@ -19,13 +19,13 @@ def Ds(i,j):  #score at (i,j) coordinates for diagonal movement
                Ix[j-1][i-1] + S(i,j),
                Iy[j-1][i-1] + S(i,j))
     
-def Ixs(i,j): #score at (i,j) coordinates for horizonatal movement
+def Iys(i,j): #score at (i,j) coordinates for vertical movement
     return max(D[j-1][i] + g + s,
-               Ix[j-1][i] + s)
+               Iy[j-1][i] + s)
 
-def Iys(i,j): #score at (i,j) coordinates for horizonatal movement
+def Ixs(i,j): #score at (i,j) coordinates for horizonatal movement
     return max(D[j][i-1] + g + s,
-               Iy[j][i-1] + s)
+               Ix[j][i-1] + s)
                         
 def initialize():
     for indy, y in enumerate(n):
@@ -39,9 +39,12 @@ def initialize():
                 Ix[0][0] = g
                 Iy[0][0] = g
             elif indy is 0 and indx > 0:
-                Iy[indy][indx] = Iys(indx,indy)
+                Ix[indy][indx] = Ixs(indx,indy)
             elif indx is 0 and indy > 0:
-                Ix[indy][indx] = Ixs(indx, indy)
+                Iy[indy][indx] = Iys(indx, indy)
+                
+def recurse():
+    
 
 filename = "input5.txt"
 if os.path.exists(filename):
@@ -68,8 +71,9 @@ Iy = np.array([[-inf]*len(m)]*len(n)) #vertical movement
 
 initialize()
 
-#np.set_printoptions(threshold=np.inf)
-print (Ix)           
-       
+#np.set_printoptions(threshold=np.inf)\
+print (D)
+print (Ix) 
+print (Iy)          
 
 
