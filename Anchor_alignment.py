@@ -1,3 +1,4 @@
+
 """
 Created on Sat Nov  4 17:01:01 2017
 
@@ -42,10 +43,45 @@ def initialize():
                 Ix[indy][indx] = Ixs(indx,indy)
             elif indx is 0 and indy > 0:
                 Iy[indy][indx] = Iys(indx, indy)
+def box_max(i,j):
+    return  max(D[j][i],
+            Ix[j][i],
+            Iy[j][i])
+def box_max_ind(i,j):
+    max_val = box_max(i,j)
+    if max_val == D[j][i]:
+        return D[j][i]  
+    elif max_val == Ix[j][i]:
+        return Ix[j][i]
+    elif max_val == Iy[j][i]:
+        return Iy[j][i]        
+def direction_max(i,j):
+    max_dir = max(box_max(i-1,j-1),
+                  box_max(i-1,j),
+                  box_max(i,j-1))
+    if max_dir == box_max(i-1,j-1):
+        m_align = m[indx-1] + m_align
+        n_align = n[indy-1] + m_align
+        indx = indx-1
+        indy = indy-1
+    elif max_dir == box_max(i-1,j):
+        m_align = m[indx-1] + m_align
+        n_align = "-" + m_align
+        indx = indx-1
+    elif max_dir == box_max(i,j-1):
+        m_align = "-" + m_align
+        n_align = n[indy-1] + m_align
+        indy = indy-1
                 
 def recurse():
-    
-
+    m_align = ""
+    n_align = ""
+    indx = m_len-1
+    indy = n_len-1
+    while indx !=0 and indy != 0:
+        direction_max(indx,indy)       
+    print (m_align)
+    print (n_align)       
 filename = "input5.txt"
 if os.path.exists(filename):
     lines = open(filename, 'r')
@@ -61,19 +97,18 @@ p1 = parameters[1] #match score
 p2 = -parameters[2] #mismatch score
 g = -parameters[3] #gap penalty
 s = -parameters[4] #extending gap penalty
-m = lines[1][:-1] # m-mer sequence of length m             
-n = lines[2][:-1] # n-mer sequence of length n        
+m = lines[1][:-1] # m-mer sequence of length m : used as the X-axis 
+m_len = len(m)          
+n = lines[2][:-1] # n-mer sequence of length n : used as the Y-axis
+n_len = len(n)
 inf = float('inf')
 
-D = np.array([[-inf]*len(m)]*len(n)) #diagonal movement
-Ix = np.array([[-inf]*len(m)]*len(n)) #horizontal movement
-Iy = np.array([[-inf]*len(m)]*len(n)) #vertical movement
+D = np.array([[-inf]*m_len]*n_len #diagonal movement
+Ix = np.array([[-inf]*m_len]*n_len)) #horizontal movement
+Iy = np.array([[-inf]*m_len]*n_len) #vertical movement
 
 initialize()
-
+recurse()
 #np.set_printoptions(threshold=np.inf)\
-print (D)
-print (Ix) 
-print (Iy)          
-
+          
 
