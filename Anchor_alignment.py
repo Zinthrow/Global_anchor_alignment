@@ -1,5 +1,6 @@
 """
 Created on Sat Nov  4 17:01:01 2017
+
 @author: alex
 """
 import os
@@ -44,7 +45,7 @@ def initialize():
                
             if indx in anchor_pairs:
                 if anchor_pairs[indx] == indy:
-                    D[indy][indx] = D[indy][indx] 
+                    D[indy][indx] = D[indy][indx] +p1*2
                     Ix[indy][indx] = Ix[indy][indx] 
                     Iy[indy][indx] = Iy[indy][indx] 
                     
@@ -52,46 +53,9 @@ def box_max(i,j):
     return  max(D[j][i],
                 Ix[j][i],
                 Iy[j][i])
-               
-class align():
-    def __init__(self, m_align = "", n_align= "", indx=m_len-1, indy= n_len-1, current = 0):
-        self.m_align = m_align
-        self.n_align = n_align
-        self.indx = indx 
-        self.indy = indy
-        self.current = current
-        self.count = 0
+    
         
-    def current_build(self):
-        
-        if box_max(self.indx,self.indy) == D[self.indy][self.indx]:
-            self.m_align = m[self.indx-1] + self.m_align
-            self.n_align = n[self.indy-1] + self.n_align
-            self.current = "D"
-        elif box_max(self.indx,self.indy) == Ix[self.indy][self.indx]:
-            self.m_align = m[self.indx-1] + self.m_align
-            self.n_align = "-" + self.n_align
-            self.current = "Ix"
-        elif box_max(self.indx,self.indy) == Iy[self.indy][self.indx]:
-            self.m_align = "-" + self.m_align
-            self.n_align = n[self.indy-1] + self.n_align
-            self.current = "Iy"
-
-    def align_run(self):
-        self.current_build()
-        while self.indx !=0 and self.indy !=0:
-            if self.current == "D":
-                self.indx = self.indx-1
-                self.indy = self.indy-1 
-            elif self.current == "Ix":
-                self.indx = self.indx-1
-            elif self.current == "Iy":                
-                self.indy = self.indy-1
-            self.current_build()
-        print (self.m_align)
-        print (self.n_align)  
-        
-filename = "input5.txt"
+filename = "input2.txt"
 if os.path.exists(filename):
     lines = open(filename, 'r')
     lines = list(lines)
@@ -125,10 +89,51 @@ elif k >= 1:
 D = np.array([[-inf]*m_len]*n_len) #diagonal movement
 Ix = np.array([[-inf]*m_len]*n_len) #horizontal movement
 Iy = np.array([[-inf]*m_len]*n_len) #vertical movement
+               
+class align():
+    def __init__(self, m_align = "", n_align= "", indx=m_len-1, indy= n_len-1, current = 0):
+        self.m_align = m_align
+        self.n_align = n_align
+        self.indx = indx 
+        self.indy = indy
+        self.current = current
+        self.count = 0
+        
+    def current_build(self,shift):
+        
+        if box_max(self.indx,self.indy) == D[self.indy][self.indx]:
+            self.m_align = m[self.indx-shift] + self.m_align
+            self.n_align = n[self.indy-shift] + self.n_align
+            self.current = "D"
+        elif box_max(self.indx,self.indy) == Ix[self.indy][self.indx]:
+            self.m_align = m[self.indx-shift] + self.m_align
+            self.n_align = "-" + self.n_align
+            self.current = "Ix"
+        elif box_max(self.indx,self.indy) == Iy[self.indy][self.indx]:
+            self.m_align = "-" + self.m_align
+            self.n_align = n[self.indy-shift] + self.n_align
+            self.current = "Iy"
+
+    def align_run(self):
+        self.current_build(0)
+        self.current_build(1)
+        while self.indx !=0 and self.indy !=0:
+            if self.current == "D":
+                self.indx = self.indx-1
+                self.indy = self.indy-1 
+            elif self.current == "Ix":
+                self.indx = self.indx-1
+            elif self.current == "Iy":                
+                self.indy = self.indy-1
+            self.current_build(1)
+        print (self.m_align)
+        print (self.n_align)  
+
 
 initialize()
-
+print (D)
+print (Ix)
+print (Iy)
 align = align()
 align.align_run()
-print (m)
-print (n)
+
