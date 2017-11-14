@@ -41,41 +41,52 @@ def initialize():
             elif indy is 0 and indx > 0:
                 Ix[indy][indx] = Ixs(indx,indy)
             elif indx is 0 and indy > 0:
-                Iy[indy][indx] = Iys(indx, indy)
-                
+                Iy[indy][indx] = Iys(indx,indy)
+               
+            if indx in anchor_pairs:
+                if anchor_pairs[indx] == indy:
+                    D[indy][indx] = D[indy][indx] 
+                    Ix[indy][indx] = Ix[indy][indx] 
+                    Iy[indy][indx] = Iy[indy][indx] 
+                    
 def box_max(i,j):
     return  max(D[j][i],
-            Ix[j][i],
-            Iy[j][i])
+                Ix[j][i],
+                Iy[j][i])
                
-def recurse():
-    m_align = m[m_len-1]
-    n_align = n[n_len-1]
-    indx = m_len-1
-    indy = n_len-1
-    while indx !=0 and indy != 0:
-        i = indx
-        j = indy
-        max_dir = max(box_max(i-1,j-1),
-                  box_max(i-1,j),
-                  box_max(i,j-1))
-        if max_dir == box_max(i-1,j-1):
-            m_align = m[i-1] + m_align
-            n_align = n[j-1] + n_align
-            indx = indx-1
-            indy = indy-1
-        elif max_dir == box_max(i-1,j):
-            m_align = m[i-1] + m_align
-            n_align = "-" + n_align
-            indx = indx-1
-        elif max_dir == box_max(i,j-1):
-            m_align = "-" + m_align
-            n_align = n[j-1] + n_align
-            indy = indy-1
-        
-    print (m_align)
-    print (n_align)       
-filename = "input5.txt"
+class align():
+    def __init__(self, m_align = "", n_align= "", indx=m_len-1, indy= n_len-1, current = 0):
+        self.m_align = m_align
+        self.n_align = n_align
+        self.indx = indx 
+        self.indy = indy
+        self.current = current 
+    def current_build(self):
+        if box_max(self.indx,self.indy) == D[self.indy][self.indx]:
+            self.m_align = m[self.indx] + self.m_align
+            self.n_align = n[self.indy] + self.n_align
+            self.current = "D"
+        elif box_max(self.indx,self.indy) == Ix[self.indy][self.indx]:
+            self.m_align = m[self.indx] + self.m_align
+            self.n_align = "-" + self.n_align
+            self.current = "Ix"
+        elif box_max(self.indx,self.indy) == Iy[self.indy][self.indx]:
+            self.m_align = "-" + self.m_align
+            self.n_align = n[self.indy] + self.n_align
+            self.current = "Iy"
+    def align_run(self):
+        while self.indx !=0 and self.indy != 0:
+            self.current_build()
+            if self.current == "D":
+                self.indx = self.indx-1
+                self.indy = self.indy-1 
+            elif self.current == "Ix":
+                self.indx = self.indx-1
+            elif self.current == "Iy":                
+                self.indy = self.indy-1            
+        print (self.m_align)
+        print (self.n_align)       
+filename = "input2.txt"
 if os.path.exists(filename):
     lines = open(filename, 'r')
     lines = list(lines)
@@ -96,9 +107,35 @@ n = lines[2][:-1] # n-mer sequence of length n : used as the Y-axis
 n_len = len(n)
 inf = float('inf')
 
+anchor_pairs = {}
+if k == 0:
+    g = 0
+elif k >= 1:
+    s = s*k 
+    for anchor in range(k):
+        pair = lines[anchor+3][:-1].split()
+        anchor_pairs[int(pair[0])] = int(pair[1])
+    
+
 D = np.array([[-inf]*m_len]*n_len) #diagonal movement
 Ix = np.array([[-inf]*m_len]*n_len) #horizontal movement
 Iy = np.array([[-inf]*m_len]*n_len) #vertical movement
 
 initialize()
-recurse()             
+
+print (D)
+print (Ix)
+print (Iy)
+align = align()
+align.align_run()
+print (m)
+print (n)
+'''
+max_dir_D = max(box_max(self.indx-1,self.indy-1),
+                            box_max(self.indx-1,self.indy),
+                            box_max(self.indx,self.indy-1))
+            max_dir_Ix = max(box_max(self.indx-1,self.indy-1),
+                            box_max(self.indx-1,self.indy))
+            max_dir_Iy = max(box_max(self.indx-1,self.indy-1),
+                            box_max(self.indx,self.indy-1))
+'''                        
