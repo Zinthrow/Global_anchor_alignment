@@ -60,33 +60,39 @@ class align():
         self.n_align = n_align
         self.indx = indx 
         self.indy = indy
-        self.current = current 
+        self.current = current
+        self.count = 0
+        
     def current_build(self):
+        
         if box_max(self.indx,self.indy) == D[self.indy][self.indx]:
-            self.m_align = m[self.indx] + self.m_align
-            self.n_align = n[self.indy] + self.n_align
+            self.m_align = m[self.indx-1] + self.m_align
+            self.n_align = n[self.indy-1] + self.n_align
             self.current = "D"
         elif box_max(self.indx,self.indy) == Ix[self.indy][self.indx]:
-            self.m_align = m[self.indx] + self.m_align
+            self.m_align = m[self.indx-1] + self.m_align
             self.n_align = "-" + self.n_align
             self.current = "Ix"
         elif box_max(self.indx,self.indy) == Iy[self.indy][self.indx]:
             self.m_align = "-" + self.m_align
-            self.n_align = n[self.indy] + self.n_align
+            self.n_align = n[self.indy-1] + self.n_align
             self.current = "Iy"
+
     def align_run(self):
-        while self.indx !=0 and self.indy != 0:
-            self.current_build()
+        self.current_build()
+        while self.indx !=0 and self.indy !=0:
             if self.current == "D":
                 self.indx = self.indx-1
                 self.indy = self.indy-1 
             elif self.current == "Ix":
                 self.indx = self.indx-1
             elif self.current == "Iy":                
-                self.indy = self.indy-1            
+                self.indy = self.indy-1
+            self.current_build()
         print (self.m_align)
-        print (self.n_align)       
-filename = "input2.txt"
+        print (self.n_align)  
+        
+filename = "input5.txt"
 if os.path.exists(filename):
     lines = open(filename, 'r')
     lines = list(lines)
@@ -123,19 +129,7 @@ Iy = np.array([[-inf]*m_len]*n_len) #vertical movement
 
 initialize()
 
-print (D)
-print (Ix)
-print (Iy)
 align = align()
 align.align_run()
 print (m)
 print (n)
-'''
-max_dir_D = max(box_max(self.indx-1,self.indy-1),
-                            box_max(self.indx-1,self.indy),
-                            box_max(self.indx,self.indy-1))
-            max_dir_Ix = max(box_max(self.indx-1,self.indy-1),
-                            box_max(self.indx-1,self.indy))
-            max_dir_Iy = max(box_max(self.indx-1,self.indy-1),
-                            box_max(self.indx,self.indy-1))
-'''                        
